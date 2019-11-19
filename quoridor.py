@@ -22,12 +22,16 @@ class Quoridor:
 
         :raises QuoridorError: si joueurs n'est pas itérable.
         :raises QuoridorError: si l'itérable de joueurs en contient plus de deux.
-        :raises QuoridorError: si le nombre de murs qu'un joueur peut placer est >10, ou négatif.
+        :raises QuoridorError: si le nombre de murs qu'un joueur peut placer est > 10, ou négatif.
         :raises QuoridorError: si la position d'un joueur est invalide.
         :raises QuoridorError: si murs n'est pas un dictionnaire lorsque présent.
         :raises QuoridorError: si le total des murs placés et plaçables n'est pas égal à 20.
         :raises QuoridorError: si la position d'un mur est invalide.
         """
+
+        
+
+
 
     def __str__(self):
         """
