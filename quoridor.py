@@ -1,6 +1,5 @@
 
 
-
 class Quoridor:
 
     def __init__(self, joueurs, murs=None):
@@ -15,7 +14,7 @@ class Quoridor:
         placer 10 murs. Dans le cas où l'argument est un dictionnaire, celui-ci doit contenir 
         une clé 'nom' identifiant le joueur, une clé 'murs' spécifiant le nombre de murs qu'il 
         peut encore placer, et une clé 'pos' qui spécifie sa position (x, y) actuelle.
-        
+
         :param murs: un dictionnaire contenant une clé 'horizontaux' associée à la liste des
         positions (x, y) des murs horizontaux, et une clé 'verticaux' associée à la liste des
         positions (x, y) des murs verticaux. Par défaut, il n'y a aucun mur placé sur le jeu.
@@ -28,10 +27,27 @@ class Quoridor:
         :raises QuoridorError: si le total des murs placés et plaçables n'est pas égal à 20.
         :raises QuoridorError: si la position d'un mur est invalide.
         """
+        self.__joueurs = joueurs
+        self.__murs = murs
+        joueurs = {'joueurs': [{'num': 'idendifiant du joueur', 'murs': 10, 'pos': (5, 1), },
+                               {'num': 'nom du joueur', 'murs': 10, 'pos': (5, 9)}]}
+        murs = {'horizontaux': [], 'verticaux': []}
 
-        
+        # Définir les cas d'erreur
+        # Si joeurs pas itérable
+        # Si iterable de joueurs contient plus que 2
+        # Si nb murs > 10 ou neg
+        if joueurs[0][murs] < 0 or joueurs[1][murs] < 0:
+            raise QuoridorError
+        elif joueurs[0][murs] > 10 or joueurs[1][murs] > 10:
+            raise QuoridorError
+        # pos invalide
+        if joueurs[0]['pos'][0] > 9 or joueurs[1]['pos'][0] > 9:
+            raise QuoridorError
 
-
+        # murs pas une dic si pres
+        # total mur placé + placable egale pas 20
+        # pos mur invalide
 
     def __str__(self):
         """
@@ -67,7 +83,7 @@ class Quoridor:
                 'verticaux': [...],
             }
         }
-        
+
         où la clé 'nom' d'un joueur est associée à son nom, la clé 'murs' est associée 
         au nombre de murs qu'il peut encore placer sur ce damier, et la clé 'pos' est 
         associée à sa position sur le damier. Une position est représentée par un tuple 
@@ -110,3 +126,7 @@ class Quoridor:
         :raises QuoridorError: la position est invalide pour cette orientation.
         :raises QuoridorError: le joueur a déjà placé tous ses murs.
         """
+
+
+class QuoridorError(Exception):
+    pass
