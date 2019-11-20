@@ -1,4 +1,6 @@
 from collections.abc import Iterable
+from copy import deepcopy
+
 
 class Quoridor:
 
@@ -30,11 +32,11 @@ class Quoridor:
         :raises QuoridorError: si la position d'un mur est invalide.
         """
 
+        # Joueurs
         if not isinstance(joueurs, Iterable): raise QuoridorError(
             "L'argument 'joueurs' doit être un itérable")
         if len(joueurs) > 2: raise QuoridorError("Seulement 2 joueurs peuvent être spécifiés")
 
-        
         liste_joueurs = []
 
         for i in range(len(joueurs)):
@@ -66,8 +68,32 @@ class Quoridor:
 
         self.joueurs = liste_joueurs
 
-        # TODO: Init les murs et gérer les exceptions qui s'y rapportent (2/6)
+        # TODO: Init les murs et gérer les exceptions qui s'y rapportent (3/7)
+        # Murs
+        
+        if murs is None:
+            murs = {'horizontaux': [], 'verticaux': []}
 
+        if not isinstance(murs, dict): 
+            raise QuoridorError(
+                "L'argument :murs: doit être un dictionnaire")
+        
+        murs_tot = 0
+        for i in self.joueurs:
+            murs_tot += i['murs']
+        murs_tot += len(murs['horizontaux']) + len(murs['verticaux'])
+        if murs_tot != 20:
+            raise QuoridorError("Le total des murs doit être de 20")
+
+        for i in len(murs['horizontaux']):
+            if not (1 <= murs['horizontaux'][i][0] <= 8 and 2 <= murs['horizontaux'][i][1] <= 9):
+                raise QuoridorError(f"La coordonnée du mur horizontal {i + 1} est erronée")
+        for i in len(murs['verticaux']):
+            if not (2 <= murs['verticaux'][i][0] <= 9 and 1 <= murs['verticaux'][i][1] <= 8):
+                raise QuoridorError(f"La coordonnée du mur vertical {i + 1} est erronée")
+
+        self.murs = murs
+        
 
     def __str__(self):
         """
