@@ -34,6 +34,7 @@ class Quoridor:
             "L'argument 'joueurs' doit être un itérable")
         if len(joueurs) > 2: raise QuoridorError("Seulement 2 joueurs peuvent être spécifiés")
 
+        
         liste_joueurs = []
 
         for i in range(len(joueurs)):
