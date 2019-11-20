@@ -237,6 +237,8 @@ class Quoridor:
             if position[1] < 1 or position[1] >= 8:
                 raise QuoridorError
 
+        if (état['joueur'][i]['murs'] for i in range(2)) == 0:
+            raise QuoridorError
         
 
         
