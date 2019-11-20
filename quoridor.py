@@ -1,6 +1,8 @@
-
+from collections.abc import Iterable
 
 class Quoridor:
+
+    noms = ()  # TODO: Initialiser cet attribut (nom des joueurs)
 
     def __init__(self, joueurs, murs=None):
         """
@@ -27,27 +29,44 @@ class Quoridor:
         :raises QuoridorError: si le total des murs placés et plaçables n'est pas égal à 20.
         :raises QuoridorError: si la position d'un mur est invalide.
         """
-        self.__joueurs = joueurs
-        self.__murs = murs
-        joueurs = {'joueurs': [{'num': 'idendifiant du joueur', 'murs': 10, 'pos': (5, 1), },
-                               {'num': 'nom du joueur', 'murs': 10, 'pos': (5, 9)}]}
-        murs = {'horizontaux': [], 'verticaux': []}
 
-        # Définir les cas d'erreur
-        # Si joeurs pas itérable
-        # Si iterable de joueurs contient plus que 2
-        # Si nb murs > 10 ou neg
-        if joueurs[0][murs] < 0 or joueurs[1][murs] < 0:
-            raise QuoridorError
-        elif joueurs[0][murs] > 10 or joueurs[1][murs] > 10:
-            raise QuoridorError
-        # pos invalide
-        if joueurs[0]['pos'][0] > 9 or joueurs[1]['pos'][0] > 9:
-            raise QuoridorError
+        if not isinstance(joueurs, Iterable): raise QuoridorError(
+            "L'argument 'joueurs' doit être un itérable")
+        if len(joueurs) > 2: raise QuoridorError("Seulement 2 joueurs peuvent être spécifiés")
 
-        # murs pas une dic si pres
-        # total mur placé + placable egale pas 20
-        # pos mur invalide
+        liste_joueurs = []
+
+        for i in range(len(joueurs)):
+            if isinstance(joueurs[i], str):
+                liste_joueurs.append({'nom': joueurs[i], 'murs': 10, 'position': 'adapt'})
+            else:
+                liste_joueurs.append(joueurs[i])
+        
+        bas_occ = False
+
+        for i in range(len(liste_joueurs)):
+            if liste_joueurs[i]['position'] == (5, 1):
+                bas_occ = True
+
+        for i in range(len(liste_joueurs)):
+            if liste_joueurs[i]['position'] == 'adapt':
+                if not bas_occ:
+                    liste_joueurs[i]['position'] = (5, 1)
+                    bas_occ = True
+                else:
+                    liste_joueurs[i]['position'] = (5, 9)
+            
+            valid_range = [_ for _ in range(1, 10)]
+            valid_pairs = [(x, y) for x in valid_range for y in valid_range]
+            if not liste_joueurs[i]['position'] in valid_pairs:
+                raise QuoridorError(f"Position du joueur {i + 1} invalide")
+            if not 0 <= liste_joueurs[i]['murs'] <= 10:
+                raise QuoridorError(f"Le nombre de murs du joueur {i + 1} est invalide")
+
+        self.joueurs = liste_joueurs
+
+        # TODO: Init les murs et gérer les exceptions qui s'y rapportent (2/6)
+
 
     def __str__(self):
         """
@@ -56,6 +75,52 @@ class Quoridor:
 
         :returns: la chaîne de caractères de la représentation.
         """
+
+        etat = self.état_partie()
+
+        grid = [
+            [' ' if (x - 1) % 4 != 0 else '.' for x in range(35)]
+            if (y - 1) % 2 != 0 else
+            [' ' for z in range(35)] for y in range(17)
+        ]
+
+        # TODO: Relier les noms
+        header = (
+            f'Légende: 1={etat["joueurs"][0]["nom"]}, 2={etat["joueurs"][1]["nom"]}' + 
+            '\n   -----------------------------------\n'
+        )
+        footer = '--|-----------------------------------\n  | 1   2   3   4   5   6   7   8   9'
+
+        # Insertion des joueurs
+        pos = etat["joueurs"][0]["pos"]
+        grid[pos[1] * 2 - 2][pos[0] * 4 - 3] = '1'
+
+        pos = etat["joueurs"][1]["pos"]
+        grid[pos[1] * 2 - 2][pos[0] * 4 - 3] = '2'
+
+        # Insertion des murs horizontaux
+        for i in etat["murs"]["horizontaux"]:
+            y = i[1] * 2 - 3
+            x = i[0] * 4 - 4
+            for j in range(7):
+                grid[y][x + j] = '-'
+
+        # Insertion des murs verticaux
+        for i in etat["murs"]["verticaux"]:
+            y = i[1] * 2 - 2
+            x = i[0] * 4 - 5
+            for j in range(3):
+                grid[y + j][x] = '|'
+
+        # Transformation de la liste en ASCII art
+        body = '9 |' + ''.join(grid[16]) + '|\n'
+        for i in range(8, 0, -1):
+            body += '  |' + ''.join(grid[i * 2 - 1]) + '|\n' + f'{i} |'+''.join(
+                grid[i * 2 - 2]) + '|\n'
+
+        tot = header + body + footer
+
+        return tot
 
     def déplacer_jeton(self, joueur, position):
         """
@@ -95,6 +160,8 @@ class Quoridor:
         situe entre les lignes y-1 et y, et bloque les colonnes x et x+1. De même, un
         mur vertical se situe entre les colonnes x-1 et x, et bloque les lignes x et x+1.
         """
+
+        return {}
 
     def jouer_coup(self, joueur):
         """
