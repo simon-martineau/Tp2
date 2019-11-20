@@ -134,28 +134,7 @@ class Quoridor:
         :raises QuoridorError: la position est invalide pour l'état actuel du jeu.
         """
 
-        self.joueur = joueur
-        self.position = position
-        Anpos1 = état['joueur'][0]['pos']
-        Anpos2 = état['joueur'][1]['pos']
-
-        if joueur == 1:
-            état['joueurs'][0]['pos'] = position
-        if joueur == 2:
-            état['joueurs'][0]['pos'] = position
-        if joueur != 1 or 2:
-            raise QuoridorError
-        if position[0] < 1 or position[0] > 9:
-            raise QuoridorError
-        if position[1] < 1 or position[1] > 9:
-            raise QuoridorError
-        if Anpos[0] - position[0] != 1 or -1:
-            raise QuoridorError
-        if Anpos[1] - position[1] != 1 or -1:
-            raise QuoridorError
-        #  TODO: Error quand jeton 2 est à proximité de jeton 1
-        
-
+       
     def état_partie(self):
         """
         Produire l'état actuel de la partie.
