@@ -135,6 +135,7 @@ class Quoridor:
         """
         self.joueur = joueur
         self.position = position
+        # Position antérieur des joueurs
         Anpos1 = état['joueur'][0]['pos']
         Anpos2 = état['joueur'][1]['pos']
 
@@ -143,15 +144,15 @@ class Quoridor:
         if joueur == 2:
             état['joueurs'][0]['pos'] = position
         if joueur != 1 or 2:
-            raise QuoridorError
+            raise QuoridorError(f"Aucun joueur ne correspond au terme {joueur}")
         if position[0] < 1 or position[0] > 9:
-            raise QuoridorError
+            raise QuoridorError('Les dimensions souhaitées sont incorrectes')
         if position[1] < 1 or position[1] > 9:
-            raise QuoridorError
+            raise QuoridorError('Les dimensions souhaitées sont incorrectes')
         if Anpos[0] - position[0] != 1 or -1:
-            raise QuoridorError
+            raise QuoridorError('Le déplacement souhaité est impossible')
         if Anpos[1] - position[1] != 1 or -1:
-            raise QuoridorError
+            raise QuoridorError('Le déplacement souhaité est impossible')
         #  TODO: Error quand jeton 2 est à proximité de jeton 1
         
 
