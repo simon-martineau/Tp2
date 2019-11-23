@@ -66,7 +66,7 @@ class Quoridor:
 
         self.joueurs = liste_joueurs
 
-        # TODO: Init les murs et gérer les exceptions qui s'y rapportent (2/6)
+        # TODO: Init les murs et gérer les exceptions qui s'y rapportent (2/6) ***liste_murs
 
 
     def __str__(self):
@@ -165,9 +165,7 @@ class Quoridor:
                 {'nom': nom1, 'murs': n1, 'pos': (x1, y1)},
                 {'nom': nom2, 'murs': n2, 'pos': (x2, y2)},
             ],
-            'murs': {
-                'horizontaux': [...],
-                'verticaux': [...],
+            'murs': {'horizontaux': [...],'verticaux': [...],
             }
         }
 
@@ -182,8 +180,8 @@ class Quoridor:
         situe entre les lignes y-1 et y, et bloque les colonnes x et x+1. De même, un
         mur vertical se situe entre les colonnes x-1 et x, et bloque les lignes x et x+1.
         """
-
-        return {}
+        état = {'joueurs': liste_joueurs, 'murs': liste_murs}
+        return état
 
     def jouer_coup(self, joueur):
         """
