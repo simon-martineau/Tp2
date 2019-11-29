@@ -3,6 +3,7 @@ import networkx as nx
 from graphe import construire_graphe
 
 
+
 class Quoridor:
 
     noms = ()  # TODO: Initialiser cet attribut (nom des joueurs)
@@ -76,6 +77,7 @@ class Quoridor:
         
         if murs is None:
             murs = {'horizontaux': [], 'verticaux': []}
+
 
         if not isinstance(murs, dict): 
             raise QuoridorError(
@@ -344,12 +346,12 @@ class Quoridor:
         :raises QuoridorError: le joueur a déjà placé tous ses murs.
         """
         self.joueur = joueur
+
         self.position = position        # Simon: Pourquoi assigner aux variables de classe une variable vide?
         self.orientation = orientation  #        Ce n'est pas le contraire? (orientation = self.orientation)
 
 
         état = self.état_partie()
-        
 
         if joueur == 1:
             # Si l'orientation est horizontale
