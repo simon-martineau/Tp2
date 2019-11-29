@@ -407,5 +407,6 @@ class Quoridor:
         if (état['joueur'][i]['murs'] for i in range(2)) == 0:
             raise QuoridorError('le joueur a déjà placé tous ses murs.')
         
+# Toto
 class QuoridorError(Exception):
     pass
