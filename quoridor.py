@@ -332,6 +332,14 @@ class Quoridor:
 
         :returns: le nom du gagnant si la partie est terminée; False autrement.
         """
+        état = self.état_partie()
+
+        if état['joueur'][0]['pos'][1] == 9:
+            return état['joueur'][0]
+        if état['joueur'][1]['pos'][1] == 1:
+            return état['joueur'][0]
+        else:
+            return False
 
     def placer_mur(self, joueur: int, position: tuple, orientation: str):
         """
@@ -346,10 +354,8 @@ class Quoridor:
         :raises QuoridorError: le joueur a déjà placé tous ses murs.
         """
         self.joueur = joueur
-
-        self.position = position        # Simon: Pourquoi assigner aux variables de classe une variable vide?
-        self.orientation = orientation  #        Ce n'est pas le contraire? (orientation = self.orientation)
-
+        self.position = position
+        self.orientation = orientation
 
         état = self.état_partie()
 
@@ -359,44 +365,47 @@ class Quoridor:
                 # on traite l'erreure en premier
                 for i in état['murs']['horizontaux']:
                     if tuple(i) == position:
-                        raise QuoridorError
+                        raise QuoridorError('un mur occupe déja cette position')
                 état['murs'][0].append(list(position))
             # si la boucle est verticale
             if orientation == 'vertical':
                 # on traite l'erreur en premier
                 for i in état['murs']['verticaux']:
                     if tuple(i) == position:
-                        raise QuoridorError
+                        raise QuoridorError('un mur occupe déja cette position')
                 état['murs'][1].append(list(position))
         if joueur == 2:
             if orientation == 'horizontal':
+                # on traite l'erreure en premier
+                for i in état['murs']['horizontaux']:
+                    if tuple(i) == position:
+                        raise QuoridorError('un mur occupe déja cette position')
                 état['murs'][0].append(list(position))
+            # si la boucle est verticale
             if orientation == 'vertical':
+                # on traite l'erreur en premier
+                for i in état['murs']['verticaux']:
+                    if tuple(i) == position:
+                        raise QuoridorError('un mur occupe déja cette position')
                 état['murs'][1].append(list(position))
         #erreure si le joueur n'est pas 1 ou 2
         if joueur != 1 or 2:
-            raise QuoridorError
+            raise QuoridorError('le numéro du joueur est autre que 1 ou 2')
         #erreur pour les murs
         if orientation == 'horizontal':
             if position[0] < 1 or position[0] >= 8:
                 raise QuoridorError
             if position[1] < 1 or position[1] > 9:
-                raise QuoridorError
+                raise QuoridorError('la position est invalide pour cette orientation.')
 
         if orientation == 'vertical':
             if position[0] < 1 or position[0] > 9: 
                 raise QuoridorError
             if position[1] < 1 or position[1] >= 8:
-                raise QuoridorError
+                raise QuoridorError('la position est invalide pour cette orientation.')
 
         if (état['joueur'][i]['murs'] for i in range(2)) == 0:
-            raise QuoridorError
+            raise QuoridorError('le joueur a déjà placé tous ses murs.')
         
-
-        
-
-
-
-
 class QuoridorError(Exception):
     pass
