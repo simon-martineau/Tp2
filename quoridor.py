@@ -1,4 +1,7 @@
 from collections.abc import Iterable
+import networkx as nx
+from graphe import construire_graphe
+
 
 
 class Quoridor:
@@ -70,7 +73,31 @@ class Quoridor:
 
         self.joueurs = liste_joueurs
 
-        # TODO: Init les murs et gérer les exceptions qui s'y rapportent (2/6)
+        # Murs
+        
+        if murs is None:
+            murs = {'horizontaux': [], 'verticaux': []}
+
+
+        if not isinstance(murs, dict): 
+            raise QuoridorError(
+                "L'argument :murs: doit être un dictionnaire")
+        
+        murs_tot = 0
+        for i in self.joueurs:
+            murs_tot += i['murs']
+        murs_tot += len(murs['horizontaux']) + len(murs['verticaux'])
+        if murs_tot != 20:
+            raise QuoridorError("Le total des murs doit être de 20")
+
+        for i in len(murs['horizontaux']):
+            if not (1 <= murs['horizontaux'][i][0] <= 8 and 2 <= murs['horizontaux'][i][1] <= 9):
+                raise QuoridorError(f"La coordonnée du mur horizontal {i + 1} est erronée")
+        for i in len(murs['verticaux']):
+            if not (2 <= murs['verticaux'][i][0] <= 9 and 1 <= murs['verticaux'][i][1] <= 8):
+                raise QuoridorError(f"La coordonnée du mur vertical {i + 1} est erronée")
+
+        self.murs = murs
 
     def __str__(self):
         """
@@ -136,26 +163,32 @@ class Quoridor:
         :raises QuoridorError: la position est invalide (en dehors du damier).
         :raises QuoridorError: la position est invalide pour l'état actuel du jeu.
         """
-    self.joueur = joueur
-    self.position = position
-    Anpos1 = état['joueur'][0]['pos']
-    Anpos2 = état['joueur'][1]['pos']
+        état = self.état_partie()
 
-    if joueur == 1:
-        état['joueurs'][0]['pos'] = position
-    if joueur == 2:
-        état['joueurs'][0]['pos'] = position
-    if joueur != 1 or 2:
-        raise QuoridorError
-    if position[0] < 1 or position[0] > 9:
-        raise QuoridorError
-    if position[1] < 1 or position[1] > 9:
-        raise QuoridorError
-    if Anpos[0] - position[0] != 1 or -1:
-        raise QuoridorError
-    if Anpos[1] - position[1] != 1 or -1:
-        raise QuoridorError
-        #  TODO: Error quand jeton 2 est à proximité de jeton 1
+        # Temporaire pour enlever les erreurs ---
+        Anpos = []
+        # ---------------------------------------
+
+        self.joueur = joueur
+        self.position = position
+        Anpos1 = état['joueur'][0]['pos']
+        Anpos2 = état['joueur'][1]['pos']
+
+        if joueur == 1:
+            état['joueurs'][0]['pos'] = position
+        if joueur == 2:
+            état['joueurs'][0]['pos'] = position
+        if joueur != 1 or 2:
+            raise QuoridorError
+        if position[0] < 1 or position[0] > 9:
+            raise QuoridorError
+        if position[1] < 1 or position[1] > 9:
+            raise QuoridorError
+        if Anpos[0] - position[0] != 1 or -1:
+            raise QuoridorError
+        if Anpos[1] - position[1] != 1 or -1:
+            raise QuoridorError
+            #  TODO: Error quand jeton 2 est à proximité de jeton 1
         
 
 
@@ -199,6 +232,99 @@ class Quoridor:
         :raises QuoridorError: le numéro du joueur est autre que 1 ou 2.
         :raises QuoridorError: la partie est déjà terminée.
         """
+        if self.partie_terminée:
+            raise QuoridorError("La partie est terminée")
+        if not 1 <= joueur <=2:
+            raise QuoridorError("Le numéro du joueur spécifié est invalide")
+
+        état = self.état_partie()
+
+        graphe = construire_graphe(
+        [joueur['pos'] for joueur in état['joueurs']],
+        état['murs']['horizontaux'],
+        état['murs']['verticaux']
+        )
+
+        pos_soi = état['joueurs'][joueur - 1]['position']
+        pos_adversaire = état['joueurs'][joueur - 1]['position']
+
+        delta = (
+            nx.shortest_path_length(graphe, (pos_adversaire), 'B2') -
+            nx.shortest_path_length(graphe, (pos_soi), 'B1')
+        )
+
+        coup = 'mur' if delta < 0 else 'bouge'
+
+        if coup == 'mur':
+            position_prochaine = nx.shortest_path(
+                graphe, (pos_adversaire), 'B2')[0]
+            if pos_adversaire[1] - position_prochaine[1] != 0:  # Si bouge verticalement
+                orientation = 'horizontal'
+                position_mur = pos_adversaire
+            else:  # Si bouge horizontalement
+                orientation = 'vertical'
+                if pos_adversaire[0] - position_prochaine[0] <= 0:  # Si bouge vers la droite
+                    position_mur = (
+                        position_prochaine[0], position_prochaine[1] - 1)
+                else:  # Si bouge vers la gauche
+                    position_mur = (
+                        position_prochaine[0] - 1, position_prochaine[1] - 1)
+
+            invalide = False
+
+            if orientation == 'horizontal':
+                for mur in état['murs']['horizontaux']:
+                    if mur[1] == position_mur[1]:
+                        if -1 < mur[0] - position_mur[0] < 1:  # Si les murs se chevauchent
+                            invalide = True
+
+                for mur in état['murs']['verticaux']:
+                    if position_mur == (mur[0] + 1, mur[1] - 1):
+                        invalide = True
+
+                if not (1 <= position_mur[0] <= 8 and 2 <= position_mur[1] <= 9):
+                    invalide = True
+
+            else:
+                for mur in état['murs']['verticaux']:
+                    if mur[0] == position_mur[0]:
+                        if -1 < mur[1] - position_mur[1] < 1:  # Si les murs se chevauchent
+                            invalide = True
+
+                for mur in état['murs']['horizontaux']:
+                    if position_mur == (mur[0] - 1, mur[1] + 1):
+                        invalide = True
+
+                if not (2 <= position_mur[0] <= 9 and 1 <= position_mur[1] <= 8):
+                    invalide = True
+
+            if orientation == 'vertical':
+                nouveau_graphe = construire_graphe(
+                    [joueur['pos'] for joueur in état['joueurs']],
+                    état['murs']['horizontaux'],
+                    état['murs']['verticaux'] + [position_mur]
+                )
+
+            else:
+                nouveau_graphe = construire_graphe(
+                    [joueur['pos'] for joueur in état['joueurs']],
+                    état['murs']['horizontaux'] + [position_mur],
+                    état['murs']['verticaux']
+                )
+
+            if not nx.has_path(nouveau_graphe, (pos_adversaire), 'B2'):
+                invalide = True
+
+            if invalide:
+                coup = 'bouge'
+        
+        if coup == 'mur':
+            self.placer_mur(1, position_mur, orientation)
+
+        else:
+            self.déplacer_jeton(1, nx.shortest_path(graphe, (pos_soi), 'B1')[0])
+
+        
 
     def partie_terminée(self):
         """
@@ -220,8 +346,12 @@ class Quoridor:
         :raises QuoridorError: le joueur a déjà placé tous ses murs.
         """
         self.joueur = joueur
-        self.position = position
-        self.orientation = orientation
+
+        self.position = position        # Simon: Pourquoi assigner aux variables de classe une variable vide?
+        self.orientation = orientation  #        Ce n'est pas le contraire? (orientation = self.orientation)
+
+
+        état = self.état_partie()
 
         if joueur == 1:
             # Si l'orientation est horizontale
