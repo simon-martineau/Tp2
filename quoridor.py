@@ -353,10 +353,7 @@ class Quoridor:
         :raises QuoridorError: la position est invalide pour cette orientation.
         :raises QuoridorError: le joueur a déjà placé tous ses murs.
         """
-        self.joueur = joueur
-        self.position = position
-        self.orientation = orientation
-
+        
         état = self.état_partie()
 
         if joueur == 1:
