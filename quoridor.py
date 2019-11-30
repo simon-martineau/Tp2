@@ -156,6 +156,7 @@ class Quoridor:
         #  TODO: Error quand jeton 2 est à proximité de jeton 1
         
 
+       
     def état_partie(self):
         """
         Produire l'état actuel de la partie.
