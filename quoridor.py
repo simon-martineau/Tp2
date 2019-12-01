@@ -144,7 +144,7 @@ class Quoridor:
         if joueur == 2:
             état['joueurs'][0]['pos'] = position
         if joueur != 1 or 2:
-            raise QuoridorError(f"Aucun joueur ne correspond au terme {joueur}")
+            raise QuoridorError(f"Aucun joueur n'est associé au terme {joueur}")
         if position[0] < 1 or position[0] > 9:
             raise QuoridorError('Les dimensions souhaitées sont incorrectes')
         if position[1] < 1 or position[1] > 9:
