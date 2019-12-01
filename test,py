@@ -1,5 +1,0 @@
-#ceci est un test
-
-
-état = {'joueurs': liste_joueurs, 'murs': liste_murs}
-    return état
