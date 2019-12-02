@@ -106,7 +106,28 @@ class TestQuoridorMethods(unittest.TestCase):
         )
 
     def test_état_partie(self):
-        pass
+        état = self.partie.état_partie()
+        self.assertEqual(
+            état,
+            {
+                "joueurs": [
+                    {"nom": "idul", "murs": 7, "pos": [5, 5]},
+                    {"nom": "automate", "murs": 3, "pos": [8, 6]}
+                ],
+                "murs": {
+                    "horizontaux": [[4, 4], [2, 6], [3, 8], [5, 8], [7, 8]],
+                    "verticaux": [[6, 2], [4, 4], [2, 6], [7, 5], [7, 7]]
+                }
+            }
+        )
+
+    def test_placer_mur_exceptions(self):
+
+        def joueur_erroné():
+            self.partie.placer_mur(joueur=0, position=(
+                4, 5), orientation='horizontal')
+
+        self.assertRaises(QuoridorError, joueur_erroné)
 
 
 if __name__ == '__main__':
