@@ -93,6 +93,8 @@ class TestQuoridorInit(unittest.TestCase):
                 self.assertRaises(QuoridorError, fn)
 
 
+
+
 class TestQuoridorMethods(unittest.TestCase):
 
     def setUp(self):
