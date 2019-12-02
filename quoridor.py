@@ -165,22 +165,20 @@ class Quoridor:
         """
        
         état = self.état_partie()
-        joueur = self.joueurs
         self.position = position
-        
-        # Position antérieur des joueurs
-        Anpos1 = état['joueur'][0]['pos']
-        Anpos2 = état['joueur'][1]['pos']
-
-        #Erreurs possibles
+    
+        #Erreur si le joueur est autre que 1 et 2
         if joueur != 1 or 2:
             raise QuoridorError(f"Aucun joueur n'est associé à {joueur}")
+
+        #Erreur si la position est en dehors du damier
         if position[0] < 1 or position[0] > 9 or position[1] < 1 or position[1] > 9:
             raise QuoridorError('Les dimensions souhaitées sont incorrectes')
-        if Anpos1[0] - position[0] != 1 or -1:
-            raise QuoridorError('Le déplacement souhaité est impossible')
-        if Anpos2[1] - position[1] != 1 or -1:
-            raise QuoridorError('Le déplacement souhaité est impossible')
+
+        #Erreur si le déplacement est impossible
+        pos_init = état['joueurs'][joueur - 1]['pos']
+        if abs(position[0] - pos_init[0]) != 1 or abs(position[1] - pos_init[1]) != 1:
+            raise QuoridorError(f'Le déplacement {position} est impossible')
 
          #Déplacer le joueurs
         if joueur == 1:
@@ -188,7 +186,6 @@ class Quoridor:
         if joueur == 2:
             état['joueurs'][1]['pos'] = position
 
-        #  TODO: Error quand jeton 2 est à proximité de jeton 1
 
     def état_partie(self):
         """
