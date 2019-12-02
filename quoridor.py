@@ -45,27 +45,27 @@ class Quoridor:
         for i in range(len(joueurs)):
             if isinstance(joueurs[i], str):
                 liste_joueurs.append(
-                    {'nom': joueurs[i], 'murs': 10, 'position': 'adapt'})
+                    {'nom': joueurs[i], 'murs': 10, 'pos': 'adapt'})
             else:
                 liste_joueurs.append(joueurs[i])
 
         bas_occ = False
 
         for i in range(len(liste_joueurs)):
-            if liste_joueurs[i]['position'] == (5, 1):
+            if liste_joueurs[i]['pos'] == (5, 1):
                 bas_occ = True
 
         for i in range(len(liste_joueurs)):
-            if liste_joueurs[i]['position'] == 'adapt':
+            if liste_joueurs[i]['pos'] == 'adapt':
                 if not bas_occ:
-                    liste_joueurs[i]['position'] = (5, 1)
+                    liste_joueurs[i]['pos'] = (5, 1)
                     bas_occ = True
                 else:
-                    liste_joueurs[i]['position'] = (5, 9)
+                    liste_joueurs[i]['pos'] = (5, 9)
 
             valid_range = [_ for _ in range(1, 10)]
             valid_pairs = [(x, y) for x in valid_range for y in valid_range]
-            if not liste_joueurs[i]['position'] in valid_pairs:
+            if not liste_joueurs[i]['pos'] in valid_pairs:
                 raise QuoridorError(f"Position du joueur {i + 1} invalide")
             if not 0 <= liste_joueurs[i]['murs'] <= 10:
                 raise QuoridorError(
@@ -90,10 +90,10 @@ class Quoridor:
         if murs_tot != 20:
             raise QuoridorError("Le total des murs doit être de 20")
 
-        for i in len(murs['horizontaux']):
+        for i in range(len(murs['horizontaux'])):
             if not (1 <= murs['horizontaux'][i][0] <= 8 and 2 <= murs['horizontaux'][i][1] <= 9):
                 raise QuoridorError(f"La coordonnée du mur horizontal {i + 1} est erronée")
-        for i in len(murs['verticaux']):
+        for i in range(len(murs['verticaux'])):
             if not (2 <= murs['verticaux'][i][0] <= 9 and 1 <= murs['verticaux'][i][1] <= 8):
                 raise QuoridorError(f"La coordonnée du mur vertical {i + 1} est erronée")
 
@@ -221,7 +221,7 @@ class Quoridor:
         mur vertical se situe entre les colonnes x-1 et x, et bloque les lignes x et x+1.
         """
 
-        return {}
+        return {'joueurs': self.joueurs, 'murs': self.murs}
 
     def jouer_coup(self, joueur):
         """
@@ -408,3 +408,9 @@ class Quoridor:
 # Toto
 class QuoridorError(Exception):
     pass
+
+if __name__ == "__main__":
+    partie = Quoridor([
+                {'nom': 'Simon', 'murs': 10, 'pos': (5, 1)},
+                {'nom': 'Robot', 'murs': 10, 'pos': (5, 9)}
+            ])
