@@ -151,7 +151,18 @@ class TestQuoridorMethods(unittest.TestCase):
             partie.état_partie()
         )
         
+    def test_déplacer_jeton_exception(self):
 
+        def joueur_autre():
+            self.partie.déplacer_jeton(3, (5, 5))
+        
+        def dimensions_incorrectes():
+            self.partie.déplacer_jeton(1, (1, 10))
+        
+        fn_list = [joueur_autre, dimensions_incorrectes]
+        for fn in fn_list:
+            with self.subTest():
+                self.assertRaises(QuoridorError, fn)
 
 if __name__ == '__main__':
     unittest.main(argv=[''], verbosity=2, exit=False)
