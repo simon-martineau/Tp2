@@ -23,21 +23,19 @@ class TestQuoridorInit(unittest.TestCase):
     def test_init_with_state(self):
         # Initiation d'une partie avec une liste de dictionnaires
         partie = Quoridor(
-            [
-                {'nom': 'Simon', 'murs': 9, 'pos': (5, 1)},
-                {'nom': 'Robot', 'murs': 10, 'pos': (5, 9)},
-            ],
+            [{"nom": "idul", "murs": 7, "pos": [5, 5]}, {
+                "nom": "automate", "murs": 3, "pos": [8, 6]}],
             murs={
-                'horizontaux': [(4, 4)],
-                'verticaux': []
+                "horizontaux": [[4, 4], [2, 6], [3, 8], [5, 8], [7, 8]],
+                "verticaux": [[6, 2], [4, 4], [2, 6], [7, 5], [7, 7]]
             }
         )
 
         self.assertEqual(
             partie.joueurs,
             [
-                {'nom': 'Simon', 'murs': 9, 'pos': (5, 1)},
-                {'nom': 'Robot', 'murs': 10, 'pos': (5, 9)},
+                {'nom': 'idul', 'murs': 7, 'pos': [5, 5]},
+                {'nom': 'Robot', 'murs': 3, 'pos': [5, 9]},
             ]
         )
 
@@ -73,7 +71,7 @@ class TestQuoridorInit(unittest.TestCase):
 
         def murs_total_erroné():
             return Quoridor(['Simon', 'Robot'], murs={
-                              'horizontaux': [(4, 4)], 'verticaux': []})
+                'horizontaux': [(4, 4)], 'verticaux': []})
 
         def pos_mur_erroné():
             return Quoridor(
@@ -99,12 +97,16 @@ class TestQuoridorMethods(unittest.TestCase):
 
     def setUp(self):
         self.partie = Quoridor(
-            [{'nom': 'Simon', 'murs': 10, 'pos': (10, 1)}, 'Robot'],
+            [{"nom": "idul", "murs": 7, "pos": [5, 5]}, {
+                "nom": "automate", "murs": 3, "pos": [8, 6]}],
             murs={
-                'horizontaux': [(3, 5)],
-                'verticaux': [(4, 4)]
+                "horizontaux": [[4, 4], [2, 6], [3, 8], [5, 8], [7, 8]],
+                "verticaux": [[6, 2], [4, 4], [2, 6], [7, 5], [7, 7]]
             }
         )
+
+    def test_état_partie(self):
+        pass
 
 
 if __name__ == '__main__':
