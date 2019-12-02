@@ -64,6 +64,7 @@ class Quoridor:
 
             valid_range = [_ for _ in range(1, 10)]
             valid_pairs = [(x, y) for x in valid_range for y in valid_range]
+            valid_pairs += [[x, y] for x in valid_range for y in valid_range]
             if not liste_joueurs[i]['pos'] in valid_pairs:
                 raise QuoridorError(f"Position du joueur {i + 1} invalide")
             if not 0 <= liste_joueurs[i]['murs'] <= 10:
