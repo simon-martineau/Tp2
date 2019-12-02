@@ -159,6 +159,7 @@ class Quoridor:
         :raises QuoridorError: la position est invalide (en dehors du damier).
         :raises QuoridorError: la position est invalide pour l'état actuel du jeu.
         """
+       
         état = self.état_partie()
         joueur = self.joueurs
         position = self.position
