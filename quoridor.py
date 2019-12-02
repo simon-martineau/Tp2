@@ -169,7 +169,7 @@ class Quoridor:
         self.position = position
     
         #Erreur si le joueur est autre que 1 et 2
-        if joueur != 1 or 2:
+        if joueur not in (1, 2):
             raise QuoridorError(f"Aucun joueur n'est associé à {joueur}")
 
         #Erreur si la position est en dehors du damier
@@ -178,7 +178,7 @@ class Quoridor:
 
         #Erreur si le déplacement est impossible
         pos_init = état['joueurs'][joueur - 1]['pos']
-        if abs(position[0] - pos_init[0]) != 1 or abs(position[1] - pos_init[1]) != 1:
+        if not (abs(position[0] - pos_init[0]) != 1 or abs(position[1] - pos_init[1]) != 1):
             raise QuoridorError(f'Le déplacement {position} est impossible')
 
          #Déplacer le joueurs

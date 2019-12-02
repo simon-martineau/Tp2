@@ -138,17 +138,17 @@ class TestQuoridorMethods(unittest.TestCase):
         partie = self.partie
         partie.déplacer_jeton(1, (6, 5))
         self.assertEqual(
-            partie.état_partie(),
             {
                 "joueurs": [
-                    {"nom": "idul", "murs": 7, "pos": [6, 5]},
+                    {"nom": "idul", "murs": 7, "pos": (6, 5)},
                     {"nom": "automate", "murs": 3, "pos": [8, 6]}
                 ],
                 "murs": {
                     "horizontaux": [[4, 4], [2, 6], [3, 8], [5, 8], [7, 8]],
                     "verticaux": [[6, 2], [4, 4], [2, 6], [7, 5], [7, 7]]
                 }
-            }
+            },
+            partie.état_partie()
         )
         
 
