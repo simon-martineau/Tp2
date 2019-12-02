@@ -124,14 +124,102 @@ class TestQuoridorMethods(unittest.TestCase):
             }
         )
 
+    # Test pour les erreurs dans la facontion placer mur
     def test_placer_mur_exceptions(self):
 
-        def joueur_erroné():
+        def joueur_erroné_0():
             self.partie.placer_mur(joueur=0, position=(
                 4, 5), orientation='horizontal')
 
-        self.assertRaises(QuoridorError, joueur_erroné)
+        def joueur_erroné_3():
+            self.partie.placer_mur(joueur=3, position=(
+                4, 5), orientation='horizontal')
 
+        def mur_occupe_position():
+            self.partie.placer_mur(joueur=1, position=(
+                4, 4), orientation='horizontal')
+
+        def position_mur_invalide():
+            self.partie.placer_mur(joueur=1, position=(
+                11, 11), orientation='horizontal')
+
+        fn_list = [joueur_erroné_0, joueur_erroné_3,
+                   mur_occupe_position, position_mur_invalide]
+        for fn in fn_list:
+            with self.subTest():
+                self.assertRaises(QuoridorError, fn)
+
+    #Test pour le fonctionnement de placer mur
+    def test_placer_mur_logique(self):
+        partie = self.partie
+        partie.placer_mur(1, (2, 2), 'vertical')
+
+        self.assertEqual(
+            {
+                "joueurs": [
+                    {"nom": "idul", "murs": 7, "pos": [5, 5]},
+                    {"nom": "automate", "murs": 3, "pos": [8, 6]}
+                ],
+                "murs": {
+                    "horizontaux": [[4, 4], [2, 6], [3, 8], [5, 8], [7, 8]],
+                    "verticaux": [[6, 2], [4, 4], [2, 6], [7, 5], [7, 7], [2, 2]]
+                }
+            },
+            partie.état_partie()
+        )
+
+    #Tout les test pour les 3 cas différents de partie terminé 
+    def test_partie_terminée_joueur1(self):
+        partie = self.partie
+
+        partie.joueurs = [
+            {"nom": "idul", "murs": 7, "pos": [1, 9]},
+            {"nom": "automate", "murs": 3, "pos": [8, 6]}
+        ]
+        partie.murs = {
+            "horizontaux": [[4, 4], [2, 6], [3, 8], [5, 8], [7, 8]],
+            "verticaux": [[6, 2], [4, 4], [2, 6], [7, 5], [7, 7], [2, 2]]
+        }
+
+        self.assertEqual(
+            'idul',
+            partie.partie_terminée()
+        )
+
+    def test_partie_terminer_joueur2(self):
+
+        partie = self.partie
+
+        partie.joueurs = [
+            {"nom": "idul", "murs": 7, "pos": [1, 5]},
+            {"nom": "automate", "murs": 3, "pos": [8, 1]}
+        ]
+        partie.murs = {
+            "horizontaux": [[4, 4], [2, 6], [3, 8], [5, 8], [7, 8]],
+            "verticaux": [[6, 2], [4, 4], [2, 6], [7, 5], [7, 7], [2, 2]]
+        }
+
+        self.assertEqual(
+            'automate',
+            partie.partie_terminée()
+        )
+
+    def test_partie_terminer_pas_terminer(self):
+        partie = self.partie
+
+        partie.joueurs = [
+            {"nom": "idul", "murs": 7, "pos": [1, 5]},
+            {"nom": "automate", "murs": 3, "pos": [8, 6]}
+        ]
+        partie.murs = {
+            "horizontaux": [[4, 4], [2, 6], [3, 8], [5, 8], [7, 8]],
+            "verticaux": [[6, 2], [4, 4], [2, 6], [7, 5], [7, 7], [2, 2]]
+        }
+
+        self.assertEqual(
+            False,
+            partie.partie_terminée()
+        )
 
 
 if __name__ == '__main__':
