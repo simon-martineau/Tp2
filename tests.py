@@ -35,13 +35,16 @@ class TestQuoridorInit(unittest.TestCase):
             partie.joueurs,
             [
                 {'nom': 'idul', 'murs': 7, 'pos': [5, 5]},
-                {'nom': 'Robot', 'murs': 3, 'pos': [5, 9]},
+                {'nom': 'automate', 'murs': 3, 'pos': [8, 6]},
             ]
         )
 
         self.assertEqual(
             partie.murs,
-            {'horizontaux': [(4, 4)], 'verticaux': []}
+            {
+                "horizontaux": [[4, 4], [2, 6], [3, 8], [5, 8], [7, 8]],
+                "verticaux": [[6, 2], [4, 4], [2, 6], [7, 5], [7, 7]]
+            }
         )
 
     def test_init_exceptions(self):
@@ -148,6 +151,7 @@ class TestQuoridorMethods(unittest.TestCase):
             }
         )
         
+
 
 if __name__ == '__main__':
     unittest.main(argv=[''], verbosity=2, exit=False)
