@@ -179,9 +179,8 @@ class Quoridor:
             raise QuoridorError('Le déplacement souhaité est impossible')
         if Anpos[1] - position[1] != 1 or -1:
             raise QuoridorError('Le déplacement souhaité est impossible')
-        #  TODO: Error quand jeton 2 est à proximité de jeton 1
+        #  TODO: Error quand jeton 2 est à proximité du jeton 1
         
-
        
     def état_partie(self):
         """
@@ -343,6 +342,6 @@ class Quoridor:
         :raises QuoridorError: le joueur a déjà placé tous ses murs.
         """
     
-
+    
 class QuoridorError(Exception):
     pass
