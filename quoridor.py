@@ -98,6 +98,7 @@ class Quoridor:
                 raise QuoridorError(f"La coordonnée du mur vertical {i + 1} est erronée")
 
         self.murs = murs
+        self.état_partie()
 
     def __str__(self):
         """
@@ -163,7 +164,6 @@ class Quoridor:
         :raises QuoridorError: la position est invalide (en dehors du damier).
         :raises QuoridorError: la position est invalide pour l'état actuel du jeu.
         """
-        état = self.état_partie()
 
         # Temporaire pour enlever les erreurs ---
         Anpos = []
@@ -171,7 +171,7 @@ class Quoridor:
 
         self.joueur = joueur
         self.position = position
-        Anpos1 = état['joueur'][0]['pos']
+        Anpos1 = état['joueurs'][0]['pos']
         Anpos2 = état['joueur'][1]['pos']
 
         if joueur == 1:
@@ -190,7 +190,8 @@ class Quoridor:
             raise QuoridorError('Le déplacement souhaité est impossible')
 
         #  TODO: Error quand jeton 2 est à proximité de jeton 1
-        
+
+        self.état_partie()
 
 
     def état_partie(self):
@@ -220,8 +221,8 @@ class Quoridor:
         situe entre les lignes y-1 et y, et bloque les colonnes x et x+1. De même, un
         mur vertical se situe entre les colonnes x-1 et x, et bloque les lignes x et x+1.
         """
-
-        return {}
+        état = {'joueurs':self.joueurs, 'murs':self.murs}
+        return état
 
     def jouer_coup(self, joueur):
         """
@@ -411,3 +412,6 @@ class Quoridor:
 # Toto
 class QuoridorError(Exception):
     pass
+
+#TEST 
+
