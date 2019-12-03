@@ -1,3 +1,4 @@
+'''Ce module contient un fonction networkx'''
 import networkx as nx
 import matplotlib.pyplot as plt
 
