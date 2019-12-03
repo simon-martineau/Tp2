@@ -165,33 +165,31 @@ class Quoridor:
         :raises QuoridorError: la position est invalide (en dehors du damier).
         :raises QuoridorError: la position est invalide pour l'état actuel du jeu.
         """
-        état = self.état_partie
-        # Temporaire pour enlever les erreurs ---
-        Anpos = []
-        # ---------------------------------------
-
-        self.joueur = joueur
+       
+        état = self.état_partie()
         self.position = position
-        Anpos1 = état['joueurs'][0]['pos']
-        Anpos2 = état['joueur'][1]['pos']
+    
+        #Erreur si le joueur est autre que 1 et 2
+        if joueur not in (1, 2):
+            raise QuoridorError(f"Aucun joueur n'est associé à {joueur}")
 
+        #Erreur si la position est en dehors du damier
+        if position[0] < 1 or position[0] > 9 or position[1] < 1 or position[1] > 9:
+            raise QuoridorError('Les dimensions souhaitées sont incorrectes')
+
+        #Erreur si le déplacement est impossible
+        pos_init = état['joueurs'][joueur - 1]['pos']
+        if not (abs(position[0] - pos_init[0]) != 1 or abs(position[1] - pos_init[1]) != 1):
+            raise QuoridorError(f'Le déplacement {position} est impossible')
+
+         #Déplacer le joueurs
         if joueur == 1:
             état['joueurs'][0]['pos'] = position
         if joueur == 2:
-            état['joueurs'][0]['pos'] = position
-        if joueur != 1 or 2:
-            raise QuoridorError(f"Aucun joueur n'est associé à {joueur}")
-        if position[0] < 1 or position[0] > 9:
-            raise QuoridorError('Les dimensions souhaitées sont incorrectes')
-        if position[1] < 1 or position[1] > 9:
-            raise QuoridorError('Les dimensions souhaitées sont incorrectes')
-        if Anpos[0] - position[0] != 1 or -1:
-            raise QuoridorError('Le déplacement souhaité est impossible')
-        if Anpos[1] - position[1] != 1 or -1:
-            raise QuoridorError('Le déplacement souhaité est impossible')
+            état['joueurs'][1]['pos'] = position
 
-        #  TODO: Error quand jeton 2 est à proximité de jeton 1
 
+       
     def état_partie(self):
         """
         Produire l'état actuel de la partie.
@@ -202,9 +200,7 @@ class Quoridor:
                 {'nom': nom1, 'murs': n1, 'pos': (x1, y1)},
                 {'nom': nom2, 'murs': n2, 'pos': (x2, y2)},
             ],
-            'murs': {
-                'horizontaux': [...],
-                'verticaux': [...],
+            'murs': {'horizontaux': [...],'verticaux': [...],
             }
         }
 
@@ -402,8 +398,6 @@ class Quoridor:
 
         if (état['joueur'][i]['murs'] for i in range(2)) == 0:
             raise QuoridorError('le joueur a déjà placé tous ses murs.')
-
-# Toto
 
 
 class QuoridorError(Exception):

@@ -96,6 +96,8 @@ class TestQuoridorInit(unittest.TestCase):
                 self.assertRaises(QuoridorError, fn)
 
 
+
+
 class TestQuoridorMethods(unittest.TestCase):
 
     def setUp(self):
@@ -168,6 +170,36 @@ class TestQuoridorMethods(unittest.TestCase):
             partie.état_partie()
         )
 
+
+    def test_déplacer_jeton(self):
+        partie = self.partie
+        partie.déplacer_jeton(1, (6, 5))
+        self.assertEqual(
+            {
+                "joueurs": [
+                    {"nom": "idul", "murs": 7, "pos": (6, 5)},
+                    {"nom": "automate", "murs": 3, "pos": [8, 6]}
+                ],
+                "murs": {
+                    "horizontaux": [[4, 4], [2, 6], [3, 8], [5, 8], [7, 8]],
+                    "verticaux": [[6, 2], [4, 4], [2, 6], [7, 5], [7, 7]]
+                }
+            },
+            partie.état_partie()
+        )
+        
+    def test_déplacer_jeton_exception(self):
+
+        def joueur_autre():
+            self.partie.déplacer_jeton(3, (5, 5))
+        
+        def dimensions_incorrectes():
+            self.partie.déplacer_jeton(1, (1, 10))
+        
+        fn_list = [joueur_autre, dimensions_incorrectes]
+        for fn in fn_list:
+            with self.subTest():
+                self.assertRaises(QuoridorError, fn)
     #Tout les test pour les 3 cas différents de partie terminé 
     def test_partie_terminée_joueur1(self):
         partie = self.partie
@@ -220,7 +252,6 @@ class TestQuoridorMethods(unittest.TestCase):
             False,
             partie.partie_terminée()
         )
-
 
 if __name__ == '__main__':
     unittest.main(argv=[''], verbosity=2, exit=False)
