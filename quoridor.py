@@ -99,6 +99,7 @@ class Quoridor:
                     f"La coordonnée du mur vertical {i + 1} est erronée")
 
         self.murs = murs
+        self.état_partie()
 
     def __str__(self):
         """
@@ -328,10 +329,10 @@ class Quoridor:
         """
         état = self.état_partie()
 
-        if état['joueur'][0]['pos'][1] == 9:
-            return état['joueur'][0]
-        if état['joueur'][1]['pos'][1] == 1:
-            return état['joueur'][0]
+        if état['joueurs'][0]['pos'][1] == 9:
+            return état['joueurs'][0]['nom']
+        if état['joueurs'][1]['pos'][1] == 1:
+            return état['joueurs'][1]['nom']
         else:
             return False
 
@@ -353,34 +354,34 @@ class Quoridor:
         if joueur == 1:
             # Si l'orientation est horizontale
             if orientation == 'horizontal':
-                # on traite l'erreure en premier
+                # on traite l'erreur en premier
                 for i in état['murs']['horizontaux']:
                     if tuple(i) == position:
                         raise QuoridorError('un mur occupe déja cette position')
-                état['murs'][0].append(list(position))
+                état['murs']['horizontaux'].append(list(position))
             # si la boucle est verticale
             if orientation == 'vertical':
                 # on traite l'erreur en premier
                 for i in état['murs']['verticaux']:
                     if tuple(i) == position:
                         raise QuoridorError('un mur occupe déja cette position')
-                état['murs'][1].append(list(position))
+                état['murs']['verticaux'].append(list(position))
         if joueur == 2:
             if orientation == 'horizontal':
                 # on traite l'erreure en premier
                 for i in état['murs']['horizontaux']:
                     if tuple(i) == position:
                         raise QuoridorError('un mur occupe déja cette position')
-                état['murs'][0].append(list(position))
+                état['murs']['horizontaux'].append(list(position))
             # si la boucle est verticale
             if orientation == 'vertical':
                 # on traite l'erreur en premier
                 for i in état['murs']['verticaux']:
                     if tuple(i) == position:
                         raise QuoridorError('un mur occupe déja cette position')
-                état['murs'][1].append(list(position))
+                état['murs']['verticaux'].append(list(position))
         # erreure si le joueur n'est pas 1 ou 2
-        if joueur != 1 or 2:
+        if joueur not in (1, 2):
             raise QuoridorError('le numéro du joueur est autre que 1 ou 2')
         # erreur pour les murs
         if orientation == 'horizontal':
