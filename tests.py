@@ -133,6 +133,42 @@ class TestQuoridorMethods(unittest.TestCase):
         self.assertRaises(QuoridorError, joueur_erroné)
 
 
+class TestJouerCoup(unittest.TestCase):
+
+    def setUp(self):
+        self.partie = Quoridor(
+            [{"nom": "idul", "murs": 7, "pos": [5, 5]}, {
+                "nom": "automate", "murs": 3, "pos": [8, 6]}],
+            murs={
+                "horizontaux": [[4, 4], [2, 6], [3, 8], [5, 8], [7, 8]],
+                "verticaux": [[6, 2], [4, 4], [2, 6], [7, 5], [7, 7]]
+            }
+        )
+
+    def test_jouer_coup_exceptions(self):
+
+        def partie_term():
+            partie = Quoridor(
+                [{"nom": "idul", "murs": 7, "pos": (2, 9)}, {
+                    "nom": "automate", "murs": 3, "pos": (8, 6)}],
+                murs={
+                    "horizontaux": [[4, 4], [2, 6], [3, 8], [5, 8], [7, 8]],
+                    "verticaux": [[6, 2], [4, 4], [2, 6], [7, 5], [7, 7]]
+                }
+            )
+            self.partie.jouer_coup(1)
+
+        def numero_invalide():
+            self.partie.jouer_coup(3)
+
+        fn_list = [
+            partie_term, numero_invalide
+        ]
+
+        for fn in fn_list:
+            with self.subTest():
+                self.assertRaises(QuoridorError, fn)
+
 
 if __name__ == '__main__':
     unittest.main(argv=[''], verbosity=2, exit=False)

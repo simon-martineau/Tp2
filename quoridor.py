@@ -1,11 +1,10 @@
+'''Ce module sert à effectuer des tests reliés à la classe Quoridor'''
 from collections.abc import Iterable
 import networkx as nx
 from graphe import construire_graphe
 
 
 class Quoridor:
-
-    noms = ()  # TODO: Initialiser cet attribut (nom des joueurs)
 
     def __init__(self, joueurs, murs=None):
         """
@@ -116,7 +115,6 @@ class Quoridor:
             [' ' for z in range(35)] for y in range(17)
         ]
 
-        # TODO: Relier les noms
         header = (
             f'Légende: 1={etat["joueurs"][0]["nom"]}, 2={etat["joueurs"][1]["nom"]}' +
             '\n   -----------------------------------\n'
@@ -189,8 +187,6 @@ class Quoridor:
             raise QuoridorError('Le déplacement souhaité est impossible')
         if Anpos[1] - position[1] != 1 or -1:
             raise QuoridorError('Le déplacement souhaité est impossible')
-
-        #  TODO: Error quand jeton 2 est à proximité de jeton 1
 
     def état_partie(self):
         """
@@ -405,13 +401,19 @@ class Quoridor:
 
 # Toto
 
-
 class QuoridorError(Exception):
     pass
 
 
 if __name__ == "__main__":
-    partie = Quoridor([
-        {'nom': 'Simon', 'murs': 10, 'pos': (5, 1)},
-        {'nom': 'Robot', 'murs': 10, 'pos': (5, 9)}
-    ])
+    partie = Quoridor(['Simon', 'JS'])
+    print(partie)
+    while 1:
+        try:
+            partie.jouer_coup(1)
+            print(partie)
+            partie.jouer_coup(2)
+            print(partie)
+        except QuoridorError as err:
+            print(err)
+            break
